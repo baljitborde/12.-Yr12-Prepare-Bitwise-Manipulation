@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitwise Manipulation – Year 12 Pre-learning | Pearson Edexcel IAS</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;padding:0;background:#f5f5f5;font-family:'Lato',sans-serif;font-size:14pt;color:#333333;line-height:1.65;}
+
+.opt{display:block;font-family:'Lato',sans-serif;font-size:14pt;padding:11px 18px;border:2px solid #d0d0d0;border-radius:6px;background:#ffffff;color:#333333;cursor:pointer;margin-bottom:10px;line-height:1.4;user-select:none;-webkit-user-select:none;transition:background 0.12s,border-color 0.12s;}
+.opt:hover{background:#e3f2fd;border-color:#007BA6;}
+.opt.correct{background:#e8f5e9!important;border-color:#388e3c!important;color:#1b5e20!important;font-weight:700;pointer-events:none;cursor:default;}
+.opt.wrong{background:#ffebee!important;border-color:#C62828!important;color:#7f0000!important;pointer-events:none;cursor:default;}
+.opt.reveal{background:#e8f5e9!important;border-color:#388e3c!important;color:#1b5e20!important;font-weight:700;pointer-events:none;cursor:default;}
+.opt.locked{pointer-events:none;cursor:default;}
+
+.wopt{display:inline-block;font-family:'Courier New',Courier,monospace;font-size:13pt;font-weight:700;padding:8px 18px;border:2px solid #d0d0d0;border-radius:6px;background:#ffffff;color:#333333;cursor:pointer;margin:4px 6px 4px 0;line-height:1.4;user-select:none;-webkit-user-select:none;transition:background 0.12s,border-color 0.12s;}
+.wopt:hover{background:#e3f2fd;border-color:#007BA6;}
+.wopt.correct{background:#e8f5e9!important;border-color:#388e3c!important;color:#1b5e20!important;pointer-events:none;}
+.wopt.wrong{background:#ffebee!important;border-color:#C62828!important;color:#7f0000!important;pointer-events:none;}
+.wopt.reveal{background:#e8f5e9!important;border-color:#388e3c!important;color:#1b5e20!important;pointer-events:none;}
+.wopt.locked{pointer-events:none;}
+
+.fb{display:none;font-family:'Lato',sans-serif;font-size:14pt;line-height:1.65;padding:14px 18px;border-radius:6px;margin-top:14px;}
+.fb-ok{background:#e8f5e9;color:#1b5e20;border:1px solid #81c784;}
+.fb-bad{background:#ffebee;color:#7f0000;border:1px solid #ef9a9a;}
+
+.tf-row{display:flex;align-items:flex-start;gap:14px;margin-bottom:10px;padding:12px 16px;background:#fff;border:1px solid #d0d0d0;border-radius:6px;flex-wrap:wrap;}
+.tf-stmt{flex:1;font-family:'Lato',sans-serif;font-size:14pt;color:#333;line-height:1.5;}
+.tf-btns{display:flex;gap:8px;flex-shrink:0;margin-top:2px;}
+.tf-btn{font-family:'Lato',sans-serif;font-size:12pt;font-weight:700;padding:7px 18px;border:2px solid #d0d0d0;border-radius:6px;background:#fff;color:#333;cursor:pointer;}
+.tf-btn:hover{background:#e3f2fd;border-color:#007BA6;}
+.tf-btn.ok{background:#e8f5e9;border-color:#388e3c;color:#1b5e20;pointer-events:none;}
+.tf-btn.bad{background:#ffebee;border-color:#C62828;color:#7f0000;pointer-events:none;}
+.tf-btn.show{background:#e8f5e9;border-color:#388e3c;color:#1b5e20;pointer-events:none;}
+.tf-row.done .tf-btn{pointer-events:none;}
+.tf-row > div:not(.tf-stmt):not(.tf-btns){flex-basis:100%;}
+
+.match-row{display:grid;grid-template-columns:230px 1fr;gap:8px;margin-bottom:8px;align-items:center;}
+.match-term{font-family:'Courier New',monospace;font-size:13pt;font-weight:700;padding:9px 12px;background:#1e1e2e;border-radius:6px;color:#a6e3a1;text-align:center;line-height:1.4;}
+.match-sel{font-family:'Lato',sans-serif;font-size:13pt;padding:9px 12px;border:2px solid #d0d0d0;border-radius:6px;background:#fff;color:#333;width:100%;cursor:pointer;}
+.match-sel:focus{outline:none;border-color:#007BA6;}
+.match-row.ok .match-sel{background:#e8f5e9;border-color:#388e3c;color:#1b5e20;}
+.match-row.bad .match-sel{background:#ffebee;border-color:#C62828;color:#7f0000;}
+.match-btn,.check-btn{display:inline-block;font-family:'Lato',sans-serif;font-size:12pt;font-weight:700;padding:8px 22px;border:2px solid #007BA6;border-radius:6px;background:#007BA6;color:#fff;cursor:pointer;margin-top:12px;margin-right:8px;}
+.match-btn:hover,.check-btn:hover{background:#005f80;}
+.match-btn:disabled,.check-btn:disabled{background:#b3d4e8;border-color:#b3d4e8;cursor:default;}
+.match-result,.drag-result{display:none;font-family:'Lato',sans-serif;font-size:14pt;line-height:1.65;padding:14px 18px;border-radius:6px;margin-top:12px;}
+
+.drag-bank{display:flex;flex-wrap:wrap;gap:8px;padding:14px;background:#f0f8ff;border:2px dashed #b3d4e8;border-radius:6px;min-height:52px;margin-bottom:12px;}
+.drag-chip{font-family:'Lato',sans-serif;font-size:12pt;font-weight:700;padding:7px 16px;border:2px solid #007BA6;border-radius:6px;background:#e3f2fd;color:#007BA6;cursor:grab;white-space:nowrap;user-select:none;-webkit-user-select:none;line-height:1.3;}
+.drag-chip:active{cursor:grabbing;opacity:0.7;}
+.drag-chip.picked{outline:3px solid #e65100;outline-offset:1px;}
+.drag-chip.locked{cursor:default;pointer-events:none;opacity:0.75;}
+.drop-zone{display:inline-flex;align-items:center;justify-content:center;min-width:130px;padding:4px 8px;border-bottom:3px solid #007BA6;background:#fafafa;font-family:'Lato',sans-serif;font-size:12pt;color:#C62828;font-weight:700;vertical-align:middle;text-align:center;min-height:36px;cursor:pointer;}
+.drop-zone:empty::before{content:'?';}
+.drop-zone.drag-over,.drag-bank.drag-over{background:#e3f2fd;border-bottom-color:#C62828;}
+.drop-zone .drag-chip{white-space:normal;}
+.sort-zone{display:flex;flex-direction:column;gap:6px;padding:12px;border-radius:6px;min-height:76px;}
+.sort-zone .drag-chip,.long-chips .drag-chip{white-space:normal;}
+.tap-tip{font-size:11pt;color:#666;margin-bottom:10px;font-style:italic;}
+
+code{font-family:'Courier New',monospace;background:#f0f0f0;padding:1px 6px;border-radius:3px;font-size:13pt;}
+.cx-tbl{border-collapse:collapse;width:100%;font-size:13pt;}
+.cx-tbl th{background:#007BA6;color:#fff;padding:9px 14px;border:1px solid #005f80;text-align:center;}
+.cx-tbl td{border:1px solid #d0d0d0;padding:8px 14px;text-align:left;vertical-align:top;}
+.cx-tbl tr:nth-child(even) td{background:#f0f8ff;}
+.cx-tbl.c td{text-align:center;vertical-align:middle;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.g2>*,.g3>*{min-width:0;}
+.mono{font-family:'Courier New',monospace;font-weight:700;}
+.hl{background:#fff3cd;border-radius:3px;padding:0 2px;}
+
+/* number inputs */
+.num-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;padding:10px 14px;background:#fff;border:1px solid #d0d0d0;border-radius:6px;}
+.num-q{flex:1;min-width:240px;font-size:13.5pt;}
+input.num{width:150px;font-family:'Courier New',monospace;font-size:13pt;font-weight:700;padding:7px 10px;border:2px solid #d0d0d0;border-radius:6px;text-align:center;}
+input.num.sm{width:56px;}
+input.num:focus{outline:none;border-color:#007BA6;}
+input.num.ok{border-color:#388e3c;background:#e8f5e9;color:#1b5e20;}
+input.num.bad{border-color:#C62828;background:#ffebee;color:#7f0000;}
+
+/* worked bit rows */
+.brow{display:flex;align-items:center;gap:4px;margin:3px 0;flex-wrap:nowrap;}
+.blbl{min-width:150px;font-size:12pt;font-weight:700;color:#555;}
+.bc{width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-weight:700;font-size:15pt;border:2px solid #b3d4e8;border-radius:5px;background:#fff;}
+.bc.new{background:#fff3e0;border-color:#e65100;color:#e65100;}
+.bc.lost{background:#ffebee;border-color:#C62828;color:#C62828;text-decoration:line-through;}
+.bc.sign{background:#f3e5f5;border-color:#9966FF;color:#9966FF;}
+.bc.m1{background:#e8f5e9;border-color:#388e3c;}
+.bc.res{background:#e3f2fd;border-color:#007BA6;color:#007BA6;}
+.bc.ghost{border:none;background:none;}
+
+/* explorers */
+.explorer{background:#1e1e2e;border-radius:8px;padding:18px 20px;color:#cdd6f4;}
+.bits{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+.bitcol{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bitpv{font-family:'Courier New',monospace;font-size:10.5pt;font-weight:700;color:#a6adc8;}
+.bitbox{width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-size:20pt;font-weight:700;border:2px solid #45475a;border-radius:8px;background:#313244;color:#6c7086;}
+.bitbox.on{background:#a6e3a1;color:#1e1e2e;border-color:#a6e3a1;}
+button.bitbox{cursor:pointer;}
+button.bitbox.on{background:#fab387;border-color:#fab387;}
+.ex-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+.ex-btns .check-btn{margin-top:0;}
+.ex-out{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:12px;font-size:13.5pt;}
+.ex-out span{font-family:'Courier New',monospace;font-weight:700;color:#f9e2af;font-size:16pt;}
+.target{display:inline-block;padding:4px 14px;border-radius:20px;border:2px solid #45475a;margin:4px;font-weight:700;font-size:12pt;}
+.target.now{border-color:#fab387;color:#fab387;}
+.target.done{border-color:#a6e3a1;color:#a6e3a1;}
+.lab-row{display:flex;align-items:center;gap:10px;justify-content:center;margin:6px 0;flex-wrap:nowrap;}
+.lab-lbl{min-width:110px;text-align:right;font-weight:700;font-size:12pt;color:#a6adc8;}
+.task{background:#313244;border-radius:6px;padding:10px 14px;margin-bottom:12px;font-size:13pt;color:#f9e2af;text-align:center;}
+
+@media (max-width:720px){
+  .g2,.g3{grid-template-columns:1fr;}
+  .match-row{grid-template-columns:1fr;}
+  .tf-row{flex-direction:column;}
+  .bitbox{width:34px;height:40px;font-size:15pt;}
+  .bc{width:28px;height:30px;font-size:12pt;}
+  .blbl{min-width:90px;font-size:10.5pt;}
+  .lab-lbl{min-width:60px;font-size:10pt;}
+}
+</style>
+</head>
+<body style="margin:0;padding:0;background:#f5f5f5;">
+<div style="max-width:960px;margin:0 auto;padding:0 0 80px;">
+
+<!-- HEADER -->
+<div style="background:#007BA6;padding:32px 40px 28px;">
+  <div style="font-size:11pt;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Pearson Edexcel International AS Computer Science &bull; Unit 1 &bull; Topic 2.2.2</div>
+  <div style="font-size:24pt;font-weight:700;color:#ffffff;margin:0 0 6px;">Bitwise Manipulation</div>
+  <div style="font-size:14pt;color:rgba(255,255,255,0.88);">Pre-learning &nbsp;|&nbsp; Year 12 Computer Science</div>
+  <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
+    <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11pt;font-weight:700;padding:4px 14px;border-radius:20px;">&#9679; 90 minutes</span>
+    <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11pt;font-weight:700;padding:4px 14px;border-radius:20px;">&#9679; 6 sections</span>
+    <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11pt;font-weight:700;padding:4px 14px;border-radius:20px;">&#9679; 22 interactive activities</span>
+  </div>
+</div>
+
+<!-- CONTENTS -->
+<div style="background:#ffffff;border-bottom:1px solid #d0d0d0;padding:20px 40px;">
+  <div style="font-size:12pt;font-weight:700;color:#007BA6;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px;">Contents</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;">
+    <div style="display:flex;align-items:center;gap:8px;font-size:12pt;"><div style="min-width:22px;height:22px;border-radius:50%;background:#007BA6;color:#fff;font-size:10pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>What is Bitwise Manipulation?</div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12pt;"><div style="min-width:22px;height:22px;border-radius:50%;background:#007BA6;color:#fff;font-size:10pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>Logical Shifts</div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12pt;"><div style="min-width:22px;height:22px;border-radius:50%;background:#007BA6;color:#fff;font-size:10pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>Arithmetic Shifts</div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12pt;"><div style="min-width:22px;height:22px;border-radius:50%;background:#007BA6;color:#fff;font-size:10pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>AND Masks</div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12pt;"><div style="min-width:22px;height:22px;border-radius:50%;background:#007BA6;color:#fff;font-size:10pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">5</div>OR and XOR Masks</div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12pt;"><div style="min-width:22px;height:22px;border-radius:50%;background:#007BA6;color:#fff;font-size:10pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</div>Choosing the Right Tool &amp; Review</div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12pt;"><div style="min-width:22px;height:22px;border-radius:50%;background:#007BA6;color:#fff;font-size:10pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">&#10003;</div>Summary</div>
+  </div>
+</div>
+
+<div style="padding:40px 40px 0;">
+
+<!-- ═══════════════ SECTION 1 ═══════════════ -->
+<div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid #d0d0d0;">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #007BA6;">
+    <div style="min-width:36px;height:36px;border-radius:50%;background:#007BA6;color:#fff;font-size:14pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+    <div style="font-size:18pt;font-weight:700;color:#007BA6;">What is Bitwise Manipulation?</div>
+    <div style="margin-left:auto;font-size:10pt;font-weight:700;color:#007BA6;background:#e3f2fd;padding:4px 12px;border-radius:20px;white-space:nowrap;border:1px solid #b3d4e8;flex-shrink:0;">&#9679; ~10 minutes</div>
+  </div>
+
+  <div style="background:#fff;border:1px solid #d0d0d0;border-radius:6px;padding:20px 24px;margin-bottom:18px;">
+    <p style="margin:0 0 14px;"><strong>Bitwise manipulation</strong> means working on the <strong>individual bits</strong> of a binary pattern rather than on the number as a whole. There are two families of operation in this topic:</p>
+    <div class="g2" style="margin-bottom:16px;">
+      <div style="background:#e3f2fd;border-radius:8px;padding:16px 18px;border-top:4px solid #007BA6;">
+        <div style="font-weight:700;color:#007BA6;font-size:15pt;margin-bottom:6px;">&#8646; Shifts</div>
+        <p style="margin:0;font-size:13pt;">Move <strong>every</strong> bit a set number of places to the left or right. Used for fast multiplication and division by powers of 2, and for moving bits into position. Two types: <strong>logical</strong> and <strong>arithmetic</strong>.</p>
+      </div>
+      <div style="background:#e8f5e9;border-radius:8px;padding:16px 18px;border-top:4px solid #388e3c;">
+        <div style="font-weight:700;color:#388e3c;font-size:15pt;margin-bottom:6px;">&#127917; Bit masks</div>
+        <p style="margin:0;font-size:13pt;">Combine a pattern with a second pattern called a <strong>mask</strong>, using <strong>AND</strong>, <strong>OR</strong> or <strong>XOR</strong>, to check, clear, set or flip chosen bits while leaving the others alone.</p>
+      </div>
+    </div>
+
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:6px;">Naming the bits</div>
+    <div style="overflow-x:auto;margin-bottom:8px;">
+      <table class="cx-tbl c" style="min-width:560px;">
+        <tr><th>Bit number</th><th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr>
+        <tr><td><strong>Place value</strong></td><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+        <tr><td><strong>Example</strong></td><td class="mono">1</td><td class="mono">0</td><td class="mono">1</td><td class="mono">1</td><td class="mono">0</td><td class="mono">0</td><td class="mono">1</td><td class="mono">0</td></tr>
+      </table>
+    </div>
+    <p style="margin:0 0 16px;font-size:13pt;">The left-most bit (bit 7) is the <strong>most significant bit (MSB)</strong>; the right-most bit (bit 0) is the <strong>least significant bit (LSB)</strong>. On this page bits are numbered from 0 on the right.</p>
+
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:6px;">Why is bitwise manipulation needed?</div>
+    <ul style="margin:0 0 14px;padding-left:1.2em;font-size:13pt;line-height:1.8;">
+      <li><strong>Speed:</strong> shifts and logic operations are among the fastest instructions a CPU can carry out — a shift is much quicker than a general multiplication or division.</li>
+      <li><strong>Saving space:</strong> one byte can hold eight separate on/off settings called <strong>flags</strong> (e.g. the CPU's status register, or which buttons on a game controller are pressed).</li>
+      <li><strong>Talking to hardware:</strong> device drivers read and write single bits in hardware registers to switch features on or off.</li>
+      <li><strong>Everyday uses:</strong> network subnet masks, file permissions, graphics and colour processing, and simple encryption.</li>
+    </ul>
+    <div style="border-left:4px solid #007BA6;background:#e3f2fd;padding:12px 16px;border-radius:0 6px 6px 0;">
+      <strong style="color:#007BA6;">Specification 2.2.2:</strong> You need to know the definition, function, characteristics, why needed and operation of logical shifts, arithmetic shifts and bit masks (AND, OR, XOR), and be able to perform binary shifts and use a mask to check the status of bits in a binary pattern.
+    </div>
+  </div>
+
+  <!-- Activity 1 — match -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9654; Activity 1 — Match the term to its definition</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:14px;">Use the dropdowns to match each term to its definition.</div>
+    <div id="match1">
+      <div class="match-row"><div class="match-term">Bitwise operation</div><select class="match-sel" data-ans="bw"></select></div>
+      <div class="match-row"><div class="match-term">MSB</div><select class="match-sel" data-ans="msb"></select></div>
+      <div class="match-row"><div class="match-term">LSB</div><select class="match-sel" data-ans="lsb"></select></div>
+      <div class="match-row"><div class="match-term">Mask</div><select class="match-sel" data-ans="mask"></select></div>
+      <div class="match-row"><div class="match-term">Flag</div><select class="match-sel" data-ans="flag"></select></div>
+    </div>
+    <button class="match-btn" id="match1-btn" onclick="checkMatch1()">&#10003; Check my answers</button>
+    <div class="match-result" id="match1-res"></div>
+  </div>
+
+  <!-- Activity 2 — MCQ correct=d -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#10003; Activity 2 — Multiple choice</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:14px;line-height:1.5;">A games console stores eight on/off settings (sound, subtitles, vibration…) in a single byte. Why is this a good use of bitwise manipulation?</div>
+    <div id="opts2">
+      <div class="opt" onclick="pickOpt(2,'a',this)">a) It lets each setting hold any number from 0 to 255</div>
+      <div class="opt" onclick="pickOpt(2,'b',this)">b) It makes the settings easier for the player to read</div>
+      <div class="opt" onclick="pickOpt(2,'c',this)">c) Bitwise operations convert the settings into hexadecimal</div>
+      <div class="opt" onclick="pickOpt(2,'d',this)">d) Eight flags fit in one byte instead of eight bytes, and masks can quickly check or change one setting without affecting the others</div>
+    </div>
+    <div class="fb" id="fb2"></div>
+  </div>
+
+  <!-- Activity 3 — TF -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#10003; Activity 3 — True or False?</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:14px;">Click True or False for each statement.</div>
+    <div class="tf-row" id="tf1">
+      <div class="tf-stmt">In an 8-bit pattern, bit 0 is the least significant bit, with a place value of 1.</div>
+      <div class="tf-btns"><button class="tf-btn" onclick="doTF(1,true,true)">True</button><button class="tf-btn" onclick="doTF(1,false,true)">False</button></div>
+    </div>
+    <div class="tf-row" id="tf2">
+      <div class="tf-stmt">A shift is usually slower for the CPU than a general multiplication.</div>
+      <div class="tf-btns"><button class="tf-btn" onclick="doTF(2,true,false)">True</button><button class="tf-btn" onclick="doTF(2,false,false)">False</button></div>
+    </div>
+    <div class="tf-row" id="tf3">
+      <div class="tf-stmt">A bit mask can change some bits of a pattern while leaving the other bits unchanged.</div>
+      <div class="tf-btns"><button class="tf-btn" onclick="doTF(3,true,true)">True</button><button class="tf-btn" onclick="doTF(3,false,true)">False</button></div>
+    </div>
+    <div class="tf-row" id="tf4">
+      <div class="tf-stmt">A shift moves only the most significant bit.</div>
+      <div class="tf-btns"><button class="tf-btn" onclick="doTF(4,true,false)">True</button><button class="tf-btn" onclick="doTF(4,false,false)">False</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 2 — LOGICAL SHIFTS ═══════════════ -->
+<div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid #d0d0d0;">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #007BA6;">
+    <div style="min-width:36px;height:36px;border-radius:50%;background:#007BA6;color:#fff;font-size:14pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+    <div style="font-size:18pt;font-weight:700;color:#007BA6;">Logical Shifts</div>
+    <div style="margin-left:auto;font-size:10pt;font-weight:700;color:#007BA6;background:#e3f2fd;padding:4px 12px;border-radius:20px;white-space:nowrap;border:1px solid #b3d4e8;flex-shrink:0;">&#9679; ~18 minutes</div>
+  </div>
+
+  <div style="background:#fff;border:1px solid #d0d0d0;border-radius:6px;padding:20px 24px;margin-bottom:18px;">
+    <p style="margin:0 0 14px;">In a <strong>logical shift</strong>, every bit moves the same number of places left or right. The bit that falls off the end is <strong>lost</strong> (in a real CPU it usually goes into the <strong>carry flag</strong>), and the empty space at the other end is <strong>always filled with 0</strong>. A logical shift treats the pattern as an <strong>unsigned</strong> binary number.</p>
+
+    <div class="g2" style="margin-bottom:14px;align-items:start;">
+      <div>
+        <div style="font-weight:700;color:#007BA6;margin-bottom:6px;">Logical shift LEFT by 1</div>
+        <div style="overflow-x:auto;">
+          <div class="brow"><span class="blbl">Before (22)</span><span class="bc lost">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">1</span><span class="bc">1</span><span class="bc">0</span></div>
+          <div class="brow"><span class="blbl">After (44)</span><span class="bc">0</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">1</span><span class="bc">1</span><span class="bc">0</span><span class="bc new">0</span></div>
+        </div>
+        <p style="margin:6px 0 0;font-size:12.5pt;">Left-most bit lost (red), 0 enters on the right (orange). Value <strong>doubles</strong>.</p>
+      </div>
+      <div>
+        <div style="font-weight:700;color:#007BA6;margin-bottom:6px;">Logical shift RIGHT by 1</div>
+        <div style="overflow-x:auto;">
+          <div class="brow"><span class="blbl">Before (22)</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">1</span><span class="bc">1</span><span class="bc lost">0</span></div>
+          <div class="brow"><span class="blbl">After (11)</span><span class="bc new">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">1</span><span class="bc">1</span></div>
+        </div>
+        <p style="margin:6px 0 0;font-size:12.5pt;">Right-most bit lost, 0 enters on the left. Value <strong>halves</strong>.</p>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;margin-bottom:14px;">
+      <table class="cx-tbl c" style="min-width:560px;">
+        <tr><th>Shift</th><th>Effect on an unsigned value</th><th>Example</th></tr>
+        <tr><td>Left by n places</td><td>Multiplies by 2<sup>n</sup></td><td>Left 3 = &times; 8</td></tr>
+        <tr><td>Right by n places</td><td>Divides by 2<sup>n</sup>, throwing away any remainder</td><td>Right 2 = &divide; 4</td></tr>
+      </table>
+    </div>
+    <div class="g2">
+      <div style="border-left:4px solid #C62828;background:#ffebee;padding:12px 16px;border-radius:0 6px 6px 0;font-size:13pt;"><strong style="color:#C62828;">Overflow:</strong> if a <strong>1</strong> is shifted out of the left, the answer is too big for the bits available and the result is wrong. 200 shifted left should be 400, but 400 needs 9 bits.</div>
+      <div style="border-left:4px solid #e65100;background:#fff3e0;padding:12px 16px;border-radius:0 6px 6px 0;font-size:13pt;"><strong style="color:#e65100;">Loss of precision:</strong> if a <strong>1</strong> is shifted out of the right, the remainder is lost. 13 shifted right by 1 gives 6, not 6.5.</div>
+    </div>
+  </div>
+
+  <!-- Activity 4 — shift explorer -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#128161; Activity 4 — Shift explorer: hit the targets</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:12px;line-height:1.5;">The register starts at 22. Use only the shift buttons to make each target value in turn. Watch which bit is lost each time.</div>
+    <div class="explorer">
+      <div style="text-align:center;margin-bottom:12px;" id="targets4"></div>
+      <div class="bits" id="bits4"></div>
+      <div class="ex-out"><div>Denary: <span id="val4">22</span></div><div>Last bit lost: <span id="lost4">–</span></div><div>Shifts used: <span id="cnt4">0</span></div></div>
+      <div class="ex-btns">
+        <button class="check-btn" onclick="exShift('L')">&#8592; Logical shift left</button>
+        <button class="check-btn" onclick="exShift('R')">Logical shift right &#8594;</button>
+        <button class="check-btn" style="background:#45475a;border-color:#45475a;" onclick="exReset()">&#8635; Reset to 22</button>
+      </div>
+    </div>
+    <div class="fb" id="fb4"></div>
+  </div>
+
+  <!-- Activity 5 — logical shift inputs -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9998; Activity 5 — Perform logical shifts</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:12px;">Type the 8-bit result of each shift.</div>
+    <div id="num5">
+      <div class="num-row"><div class="num-q"><span class="mono">00110101</span> logical shift left 1</div><input class="num" data-ans="01101010" data-hint="Left 1: every bit moves one place left and a 0 enters on the right: 01101010."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">00110101</span> logical shift left 2</div><input class="num" data-ans="11010100" data-hint="Left 2: two 0s enter on the right: 11010100."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">10110100</span> logical shift right 2</div><input class="num" data-ans="00101101" data-hint="Right 2: the two right-most bits (00) are lost and two 0s enter on the left: 00101101."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">11001011</span> logical shift right 3</div><input class="num" data-ans="00011001" data-hint="Right 3: the bits 011 are lost and three 0s enter on the left: 00011001."></div>
+    </div>
+    <button class="check-btn" id="btn5" onclick="checkNums(5)">&#10003; Check my answers</button>
+    <div class="drag-result" id="res5"></div>
+  </div>
+
+  <!-- Activity 6 — drag shift -->
+  <div class="act" data-n="6" style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9707; Activity 6 — Build the result of a shift</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:6px;line-height:1.5;">Perform a <strong>logical shift left by 1</strong> on <span class="mono">10010111</span>. Drag a bit into each position of the result, then the bit that is lost. Two chips are not needed.</div>
+    <div class="tap-tip">Tip: you can also tap a chip and then tap a gap to place it.</div>
+    <div class="drag-bank" id="bank6">
+      <div class="drag-chip" draggable="true">1</div><div class="drag-chip" draggable="true">0</div><div class="drag-chip" draggable="true">1</div><div class="drag-chip" draggable="true">0</div><div class="drag-chip" draggable="true">1</div><div class="drag-chip" draggable="true">0</div>
+      <div class="drag-chip" draggable="true">1</div><div class="drag-chip" draggable="true">0</div><div class="drag-chip" draggable="true">1</div><div class="drag-chip" draggable="true">0</div><div class="drag-chip" draggable="true">1</div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="cx-tbl c" style="background:#fff;min-width:640px;">
+        <tr><th>Bit lost</th><th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr>
+        <tr><td style="background:#ffebee;">–</td><td class="mono">1</td><td class="mono">0</td><td class="mono">0</td><td class="mono">1</td><td class="mono">0</td><td class="mono">1</td><td class="mono">1</td><td class="mono">1</td></tr>
+        <tr><td style="background:#ffebee;"><span id="dz6x" class="drop-zone" style="min-width:50px;"></span></td>
+          <td><span id="dz6a" class="drop-zone" style="min-width:44px;"></span></td><td><span id="dz6b" class="drop-zone" style="min-width:44px;"></span></td><td><span id="dz6c" class="drop-zone" style="min-width:44px;"></span></td><td><span id="dz6d" class="drop-zone" style="min-width:44px;"></span></td>
+          <td><span id="dz6e" class="drop-zone" style="min-width:44px;"></span></td><td><span id="dz6f" class="drop-zone" style="min-width:44px;"></span></td><td><span id="dz6g" class="drop-zone" style="min-width:44px;"></span></td><td><span id="dz6h" class="drop-zone" style="min-width:44px;"></span></td></tr>
+      </table>
+    </div>
+    <button class="check-btn" id="btn6" onclick="checkDrop6()">&#10003; Check my shift</button>
+    <div class="drag-result" id="res6"></div>
+  </div>
+
+  <!-- Activity 7 — MCQ correct=b -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#10003; Activity 7 — Multiple choice</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:14px;line-height:1.5;"><span class="mono">11001000</span> (200) is logically shifted left by 1 in an 8-bit register. The result is <span class="mono">10010000</span> (144), not 400. Why?</div>
+    <div id="opts7">
+      <div class="opt" onclick="pickOpt(7,'a',this)">a) A left shift divides by 2, not multiplies</div>
+      <div class="opt" onclick="pickOpt(7,'b',this)">b) A 1 was shifted out of the MSB: 400 needs 9 bits, so an overflow has happened</div>
+      <div class="opt" onclick="pickOpt(7,'c',this)">c) A 1 entered on the right instead of a 0</div>
+      <div class="opt" onclick="pickOpt(7,'d',this)">d) The register should have used an arithmetic shift to get 400</div>
+    </div>
+    <div class="fb" id="fb7"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 3 — ARITHMETIC SHIFTS ═══════════════ -->
+<div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid #d0d0d0;">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #007BA6;">
+    <div style="min-width:36px;height:36px;border-radius:50%;background:#007BA6;color:#fff;font-size:14pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+    <div style="font-size:18pt;font-weight:700;color:#007BA6;">Arithmetic Shifts</div>
+    <div style="margin-left:auto;font-size:10pt;font-weight:700;color:#007BA6;background:#e3f2fd;padding:4px 12px;border-radius:20px;white-space:nowrap;border:1px solid #b3d4e8;flex-shrink:0;">&#9679; ~17 minutes</div>
+  </div>
+
+  <div style="background:#fff;border:1px solid #d0d0d0;border-radius:6px;padding:20px 24px;margin-bottom:18px;">
+    <p style="margin:0 0 12px;">An <strong>arithmetic shift</strong> is used on <strong>signed</strong> numbers stored in <strong>two's complement</strong>. Quick reminder: in 8-bit two's complement the MSB has a place value of <strong>&minus;128</strong>, so the MSB acts as the <strong>sign bit</strong> — 0 means positive, 1 means negative.</p>
+    <div style="overflow-x:auto;margin-bottom:14px;">
+      <table class="cx-tbl c" style="min-width:560px;">
+        <tr><th>&minus;128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th><th>Value</th></tr>
+        <tr><td class="mono">1</td><td class="mono">1</td><td class="mono">1</td><td class="mono">0</td><td class="mono">1</td><td class="mono">0</td><td class="mono">0</td><td class="mono">0</td><td>&minus;128 + 64 + 32 + 8 = <strong>&minus;24</strong></td></tr>
+      </table>
+    </div>
+    <p style="margin:0 0 10px;">The problem: if we <em>logically</em> shift &minus;24 right, a 0 enters the sign bit and the number suddenly becomes positive. An <strong>arithmetic shift right</strong> fixes this by <strong>copying the sign bit</strong> into the MSB instead of inserting 0.</p>
+    <div class="g2" style="margin-bottom:14px;align-items:start;">
+      <div>
+        <div style="font-weight:700;color:#C62828;margin-bottom:6px;">&#10007; Logical shift right by 1</div>
+        <div style="overflow-x:auto;">
+          <div class="brow"><span class="blbl">Before (&minus;24)</span><span class="bc sign">1</span><span class="bc">1</span><span class="bc">1</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">0</span><span class="bc lost">0</span></div>
+          <div class="brow"><span class="blbl">After (+116)</span><span class="bc new">0</span><span class="bc">1</span><span class="bc">1</span><span class="bc">1</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">0</span></div>
+        </div>
+        <p style="margin:6px 0 0;font-size:12.5pt;">The sign is lost — the answer is wrong.</p>
+      </div>
+      <div>
+        <div style="font-weight:700;color:#388e3c;margin-bottom:6px;">&#10003; Arithmetic shift right by 1</div>
+        <div style="overflow-x:auto;">
+          <div class="brow"><span class="blbl">Before (&minus;24)</span><span class="bc sign">1</span><span class="bc">1</span><span class="bc">1</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">0</span><span class="bc lost">0</span></div>
+          <div class="brow"><span class="blbl">After (&minus;12)</span><span class="bc sign">1</span><span class="bc">1</span><span class="bc">1</span><span class="bc">1</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">0</span></div>
+        </div>
+        <p style="margin:6px 0 0;font-size:12.5pt;">The sign bit (purple) is copied in, so &minus;24 &divide; 2 = &minus;12 &#10003;</p>
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:14px;">
+      <div style="background:#f3e5f5;border-radius:8px;padding:14px 16px;font-size:13pt;"><strong style="color:#9966FF;">Arithmetic shift right</strong><br>Bits move right; the <strong>sign bit is copied</strong> into the MSB each time. Divides a signed number by 2<sup>n</sup> and keeps its sign. Positive numbers have a sign bit of 0, so 0s enter — the same as a logical shift.</div>
+      <div style="background:#f3e5f5;border-radius:8px;padding:14px 16px;font-size:13pt;"><strong style="color:#9966FF;">Arithmetic shift left</strong><br>Bits move left and <strong>0s enter on the right</strong> — the same as a logical shift left. It multiplies by 2<sup>n</sup>. If the sign bit <strong>changes</strong>, the result has overflowed and is wrong.</div>
+    </div>
+    <div style="border-left:4px solid #e65100;background:#fff3e0;padding:12px 16px;border-radius:0 6px 6px 0;font-size:13pt;">
+      <strong style="color:#e65100;">Which shift?</strong> Use a <strong>logical</strong> shift for unsigned numbers and for moving bits around in a pattern. Use an <strong>arithmetic</strong> shift when the pattern is a <strong>signed</strong> two's complement number and you need to keep its sign.
+    </div>
+  </div>
+
+  <!-- Activity 8 — word chip correct=c -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9998; Activity 8 — Fill in the gap</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:16px;line-height:1.6;">In an arithmetic shift right, the empty position on the left is filled with <span style="background:#1e1e2e;color:#fab387;font-family:'Courier New',monospace;padding:2px 10px;border-radius:4px;font-size:13pt;">&#9744;</span>.</div>
+    <div id="opts8w">
+      <span class="wopt" onclick="pickWopt(8,'a',this)">always 0</span>
+      <span class="wopt" onclick="pickWopt(8,'b',this)">always 1</span>
+      <span class="wopt" onclick="pickWopt(8,'c',this)">a copy of the sign bit</span>
+      <span class="wopt" onclick="pickWopt(8,'d',this)">the bit that was lost</span>
+    </div>
+    <div class="fb" id="fb8"></div>
+  </div>
+
+  <!-- Activity 9 — arithmetic shifts inputs -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9998; Activity 9 — Perform arithmetic shifts</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:12px;">These are 8-bit two's complement numbers. Type the 8-bit result.</div>
+    <div id="num9">
+      <div class="num-row"><div class="num-q"><span class="mono">11101000</span> (&minus;24) arithmetic shift right 2</div><input class="num" data-ans="11111010" data-hint="Right 2 on 11101000: the sign bit 1 is copied in twice: 11111010 (&minus;6)."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">01101000</span> (104) arithmetic shift right 2</div><input class="num" data-ans="00011010" data-hint="Right 2 on 01101000: the sign bit is 0, so 0s enter: 00011010 (26)."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">11110000</span> (&minus;16) arithmetic shift right 3</div><input class="num" data-ans="11111110" data-hint="Right 3 on 11110000: three copies of the sign bit 1 enter: 11111110 (&minus;2)."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">11111011</span> (&minus;5) arithmetic shift left 1</div><input class="num" data-ans="11110110" data-hint="Left 1 on 11111011: 0 enters on the right: 11110110 (&minus;10). The sign bit is still 1, so no overflow."></div>
+    </div>
+    <button class="check-btn" id="btn9" onclick="checkNums(9)">&#10003; Check my answers</button>
+    <div class="drag-result" id="res9"></div>
+  </div>
+
+  <!-- Activity 10 — MCQ correct=a -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#10003; Activity 10 — Multiple choice</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:14px;line-height:1.5;">The signed number <span class="mono">01100000</span> (+96) is <strong>arithmetically</strong> shifted left by 1. The result is <span class="mono">11000000</span>. What does this show?</div>
+    <div id="opts10">
+      <div class="opt" onclick="pickOpt(10,'a',this)">a) An overflow: the sign bit changed from 0 to 1, so the result (&minus;64) is wrong — +192 is too big for 8-bit two's complement</div>
+      <div class="opt" onclick="pickOpt(10,'b',this)">b) The shift worked correctly and the answer is +192</div>
+      <div class="opt" onclick="pickOpt(10,'c',this)">c) The sign bit should have been copied into the LSB</div>
+      <div class="opt" onclick="pickOpt(10,'d',this)">d) A left shift divides the number by 2</div>
+    </div>
+    <div class="fb" id="fb10"></div>
+  </div>
+
+  <!-- Activity 11 — sort logical/arithmetic -->
+  <div class="act" data-n="11" style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#8644; Activity 11 — Sort: logical or arithmetic shift?</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:6px;line-height:1.5;">Drag each statement into the type of shift it describes.</div>
+    <div class="drag-bank long-chips" id="bank11">
+      <div class="drag-chip" draggable="true">On a right shift, a 0 always enters from the left</div>
+      <div class="drag-chip" draggable="true">On a right shift, the sign bit is copied into the MSB</div>
+      <div class="drag-chip" draggable="true">Treats the pattern as an unsigned number</div>
+      <div class="drag-chip" draggable="true">Keeps the sign of a two's complement number</div>
+      <div class="drag-chip" draggable="true">Shifting 10000000 right by 1 gives 01000000</div>
+      <div class="drag-chip" draggable="true">Shifting 10000000 right by 1 gives 11000000</div>
+    </div>
+    <div class="g2" style="margin-bottom:12px;">
+      <div>
+        <div style="font-size:13pt;font-weight:700;color:#007BA6;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;text-align:center;">Logical shift</div>
+        <div id="sort11-log" class="sort-zone drag-bank" style="border-color:#007BA6;background:#f0f8ff;min-height:130px;"></div>
+      </div>
+      <div>
+        <div style="font-size:13pt;font-weight:700;color:#9966FF;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;text-align:center;">Arithmetic shift</div>
+        <div id="sort11-ari" class="sort-zone drag-bank" style="border-color:#9966FF;background:#f8f0ff;min-height:130px;"></div>
+      </div>
+    </div>
+    <button class="check-btn" id="btn11" onclick="checkSort11()">&#10003; Check my sort</button>
+    <div class="drag-result" id="res11"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 4 — AND MASKS ═══════════════ -->
+<div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid #d0d0d0;">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #007BA6;">
+    <div style="min-width:36px;height:36px;border-radius:50%;background:#007BA6;color:#fff;font-size:14pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div>
+    <div style="font-size:18pt;font-weight:700;color:#007BA6;">AND Masks: Checking and Clearing Bits</div>
+    <div style="margin-left:auto;font-size:10pt;font-weight:700;color:#007BA6;background:#e3f2fd;padding:4px 12px;border-radius:20px;white-space:nowrap;border:1px solid #b3d4e8;flex-shrink:0;">&#9679; ~15 minutes</div>
+  </div>
+
+  <div style="background:#fff;border:1px solid #d0d0d0;border-radius:6px;padding:20px 24px;margin-bottom:18px;">
+    <p style="margin:0 0 12px;">A <strong>bit mask</strong> is a binary pattern that is combined with another pattern <strong>bit by bit</strong>: bit 7 with bit 7, bit 6 with bit 6, and so on. The logic operation decides what happens to each bit.</p>
+    <div class="g2" style="margin-bottom:14px;align-items:start;">
+      <div>
+        <table class="cx-tbl c" style="font-size:12.5pt;">
+          <tr><th>Bit</th><th>Mask</th><th>AND</th></tr>
+          <tr><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+      </div>
+      <div style="font-size:13pt;">
+        <p style="margin:0 0 8px;">AND gives 1 only when <strong>both</strong> bits are 1. So:</p>
+        <ul style="margin:0;padding-left:1.2em;line-height:1.8;">
+          <li>A <strong>1</strong> in the mask <strong>keeps</strong> the original bit.</li>
+          <li>A <strong>0</strong> in the mask <strong>clears</strong> the bit to 0.</li>
+        </ul>
+        <p style="margin:8px 0 0;">That makes AND perfect for <strong>checking</strong> one bit or <strong>clearing</strong> (switching off) bits.</p>
+      </div>
+    </div>
+    <div style="font-size:14pt;font-weight:700;color:#007BA6;margin-bottom:6px;">Using a mask to check the status of a bit</div>
+    <p style="margin:0 0 8px;font-size:13pt;">Is bit 5 of <span class="mono">10110010</span> set to 1? Make a mask with a 1 <strong>only</strong> in bit 5, and AND it with the pattern:</p>
+    <div style="overflow-x:auto;margin-bottom:8px;">
+      <div class="brow"><span class="blbl">Pattern</span><span class="bc">1</span><span class="bc">0</span><span class="bc m1">1</span><span class="bc">1</span><span class="bc">0</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span></div>
+      <div class="brow"><span class="blbl">Mask (AND)</span><span class="bc">0</span><span class="bc">0</span><span class="bc m1">1</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span></div>
+      <div class="brow"><span class="blbl">Result</span><span class="bc res">0</span><span class="bc res">0</span><span class="bc res">1</span><span class="bc res">0</span><span class="bc res">0</span><span class="bc res">0</span><span class="bc res">0</span><span class="bc res">0</span></div>
+    </div>
+    <p style="margin:0 0 14px;font-size:13pt;">Every other bit is cleared to 0. If the result is <strong>not zero</strong>, the bit was <strong>1</strong>; if the result is <span class="mono">00000000</span>, the bit was <strong>0</strong>. Here the result is <span class="mono">00100000</span>, so bit 5 is set.</p>
+    <div style="border-left:4px solid #9966FF;background:#f3e5f5;padding:12px 16px;border-radius:0 6px 6px 0;font-size:13pt;">
+      <strong style="color:#9966FF;">Real use:</strong> a network <strong>subnet mask</strong> such as 255.255.255.0 is ANDed with an IP address to keep the network part of the address and clear the host part.
+    </div>
+  </div>
+
+  <!-- Activity 12 — AND mask lab -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#128161; Activity 12 — AND mask lab</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:12px;line-height:1.5;">Click the mask bits to build the mask that completes each task. The result updates as you go.</div>
+    <div class="explorer" id="lab12"></div>
+    <div class="fb" id="fb12"></div>
+  </div>
+
+  <!-- Activity 13 — AND inputs -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9998; Activity 13 — Apply AND masks</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:12px;">Type the 8-bit result of each AND.</div>
+    <div id="num13">
+      <div class="num-row"><div class="num-q"><span class="mono">11011010</span> AND <span class="mono">00001111</span></div><input class="num" data-ans="00001010" data-hint="11011010 AND 00001111: the upper nibble is cleared and the lower nibble kept: 00001010."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">10110101</span> AND <span class="mono">11110000</span></div><input class="num" data-ans="10110000" data-hint="10110101 AND 11110000: the upper nibble is kept and the lower nibble cleared: 10110000."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">01100110</span> AND <span class="mono">00100000</span></div><input class="num" data-ans="00100000" data-hint="01100110 AND 00100000: only bit 5 is checked, and it is 1: 00100000."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">01011001</span> AND <span class="mono">10000000</span></div><input class="num" data-ans="00000000" data-hint="01011001 AND 10000000: only bit 7 is checked, and it is 0, so the result is 00000000."></div>
+    </div>
+    <button class="check-btn" id="btn13" onclick="checkNums(13)">&#10003; Check my answers</button>
+    <div class="drag-result" id="res13"></div>
+  </div>
+
+  <!-- Activity 14 — MCQ correct=c -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#10003; Activity 14 — Multiple choice</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:14px;line-height:1.5;">A program must check whether <strong>bit 2</strong> of a status byte is 1. Which operation and mask should it use, and how does it read the answer?</div>
+    <div id="opts14">
+      <div class="opt" onclick="pickOpt(14,'a',this)">a) OR with <span class="mono">00000100</span>; if the result is 0 the bit is set</div>
+      <div class="opt" onclick="pickOpt(14,'b',this)">b) AND with <span class="mono">11111011</span>; if the result is 0 the bit is set</div>
+      <div class="opt" onclick="pickOpt(14,'c',this)">c) AND with <span class="mono">00000100</span>; if the result is not zero the bit is 1</div>
+      <div class="opt" onclick="pickOpt(14,'d',this)">d) XOR with <span class="mono">00000100</span>; if the result is 00000100 the bit is 1</div>
+    </div>
+    <div class="fb" id="fb14"></div>
+  </div>
+
+  <!-- Activity 15 — TF -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#10003; Activity 15 — True or False?</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:14px;">Click True or False for each statement about AND masks.</div>
+    <div class="tf-row" id="tf5">
+      <div class="tf-stmt">ANDing a bit with 0 always gives 0.</div>
+      <div class="tf-btns"><button class="tf-btn" onclick="doTF(5,true,true)">True</button><button class="tf-btn" onclick="doTF(5,false,true)">False</button></div>
+    </div>
+    <div class="tf-row" id="tf6">
+      <div class="tf-stmt">An AND mask can be used to set chosen bits to 1.</div>
+      <div class="tf-btns"><button class="tf-btn" onclick="doTF(6,true,false)">True</button><button class="tf-btn" onclick="doTF(6,false,false)">False</button></div>
+    </div>
+    <div class="tf-row" id="tf7">
+      <div class="tf-stmt">ANDing any pattern with <span class="mono">11111111</span> leaves it unchanged.</div>
+      <div class="tf-btns"><button class="tf-btn" onclick="doTF(7,true,true)">True</button><button class="tf-btn" onclick="doTF(7,false,true)">False</button></div>
+    </div>
+    <div class="tf-row" id="tf8">
+      <div class="tf-stmt">When checking one bit with an AND mask, a result of 00000000 means the bit was 1.</div>
+      <div class="tf-btns"><button class="tf-btn" onclick="doTF(8,true,false)">True</button><button class="tf-btn" onclick="doTF(8,false,false)">False</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 5 — OR & XOR ═══════════════ -->
+<div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid #d0d0d0;">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #007BA6;">
+    <div style="min-width:36px;height:36px;border-radius:50%;background:#007BA6;color:#fff;font-size:14pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">5</div>
+    <div style="font-size:18pt;font-weight:700;color:#007BA6;">OR and XOR Masks: Setting and Flipping Bits</div>
+    <div style="margin-left:auto;font-size:10pt;font-weight:700;color:#007BA6;background:#e3f2fd;padding:4px 12px;border-radius:20px;white-space:nowrap;border:1px solid #b3d4e8;flex-shrink:0;">&#9679; ~15 minutes</div>
+  </div>
+
+  <div style="background:#fff;border:1px solid #d0d0d0;border-radius:6px;padding:20px 24px;margin-bottom:18px;">
+    <div class="g2" style="margin-bottom:14px;align-items:start;">
+      <div style="background:#e8f5e9;border-radius:8px;padding:14px 16px;border-top:4px solid #388e3c;">
+        <div style="font-weight:700;color:#388e3c;font-size:15pt;margin-bottom:6px;">OR — set bits to 1</div>
+        <table class="cx-tbl c" style="font-size:12pt;margin-bottom:8px;"><tr><th>Bit</th><th>Mask</th><th>OR</th></tr><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td></tr></table>
+        <p style="margin:0;font-size:12.5pt;">A <strong>1</strong> in the mask <strong>sets</strong> the bit to 1. A <strong>0</strong> in the mask <strong>keeps</strong> the bit. Used to switch flags <strong>on</strong>.</p>
+      </div>
+      <div style="background:#fff3e0;border-radius:8px;padding:14px 16px;border-top:4px solid #e65100;">
+        <div style="font-weight:700;color:#e65100;font-size:15pt;margin-bottom:6px;">XOR — flip (toggle) bits</div>
+        <table class="cx-tbl c" style="font-size:12pt;margin-bottom:8px;"><tr><th>Bit</th><th>Mask</th><th>XOR</th></tr><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td><td>0</td></tr></table>
+        <p style="margin:0;font-size:12.5pt;">A <strong>1</strong> in the mask <strong>flips</strong> the bit. A <strong>0</strong> <strong>keeps</strong> it. XOR gives 1 when the bits are <strong>different</strong>.</p>
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:14px;">
+      <div style="font-size:13pt;">
+        <div style="font-weight:700;color:#388e3c;margin-bottom:4px;">Example: switch on bit 0 and bit 1</div>
+        <div style="overflow-x:auto;">
+          <div class="brow"><span class="blbl">Pattern</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc m1">0</span><span class="bc m1">1</span></div>
+          <div class="brow"><span class="blbl">Mask (OR)</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc m1">1</span><span class="bc m1">1</span></div>
+          <div class="brow"><span class="blbl">Result</span><span class="bc res">0</span><span class="bc res">1</span><span class="bc res">0</span><span class="bc res">0</span><span class="bc res">1</span><span class="bc res">0</span><span class="bc res">1</span><span class="bc res">1</span></div>
+        </div>
+      </div>
+      <div style="font-size:13pt;">
+        <div style="font-weight:700;color:#e65100;margin-bottom:4px;">Example: flip the upper nibble</div>
+        <div style="overflow-x:auto;">
+          <div class="brow"><span class="blbl">Pattern</span><span class="bc m1">1</span><span class="bc m1">1</span><span class="bc m1">0</span><span class="bc m1">0</span><span class="bc">1</span><span class="bc">0</span><span class="bc">1</span><span class="bc">0</span></div>
+          <div class="brow"><span class="blbl">Mask (XOR)</span><span class="bc m1">1</span><span class="bc m1">1</span><span class="bc m1">1</span><span class="bc m1">1</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span><span class="bc">0</span></div>
+          <div class="brow"><span class="blbl">Result</span><span class="bc res">0</span><span class="bc res">0</span><span class="bc res">1</span><span class="bc res">1</span><span class="bc res">1</span><span class="bc res">0</span><span class="bc res">1</span><span class="bc res">0</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="border-left:4px solid #9966FF;background:#f3e5f5;padding:12px 16px;border-radius:0 6px 6px 0;font-size:13pt;">
+      <strong style="color:#9966FF;">Useful XOR facts:</strong> XOR with <span class="mono">11111111</span> flips every bit. XOR with the same mask <strong>twice</strong> gets you back to the original pattern — the idea behind simple XOR encryption. XORing a value with itself always gives 0, so XOR can check whether two patterns are identical.
+    </div>
+  </div>
+
+  <!-- Activity 16 — truth tables -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9998; Activity 16 — Complete the truth table from memory</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:12px;">Type 0 or 1 in each box. Try it without scrolling up!</div>
+    <div id="num16" style="overflow-x:auto;">
+      <table class="cx-tbl c" style="max-width:560px;background:#fff;">
+        <tr><th>Bit</th><th>Mask</th><th>AND</th><th>OR</th><th>XOR</th></tr>
+        <tr><td>0</td><td>0</td><td><input class="num sm" data-ans="0" data-hint="0 AND 0 = 0."></td><td><input class="num sm" data-ans="0" data-hint="0 OR 0 = 0."></td><td><input class="num sm" data-ans="0" data-hint="0 XOR 0 = 0 (same bits)."></td></tr>
+        <tr><td>0</td><td>1</td><td><input class="num sm" data-ans="0" data-hint="0 AND 1 = 0 (AND needs both to be 1)."></td><td><input class="num sm" data-ans="1" data-hint="0 OR 1 = 1."></td><td><input class="num sm" data-ans="1" data-hint="0 XOR 1 = 1 (different bits)."></td></tr>
+        <tr><td>1</td><td>0</td><td><input class="num sm" data-ans="0" data-hint="1 AND 0 = 0."></td><td><input class="num sm" data-ans="1" data-hint="1 OR 0 = 1."></td><td><input class="num sm" data-ans="1" data-hint="1 XOR 0 = 1."></td></tr>
+        <tr><td>1</td><td>1</td><td><input class="num sm" data-ans="1" data-hint="1 AND 1 = 1."></td><td><input class="num sm" data-ans="1" data-hint="1 OR 1 = 1."></td><td><input class="num sm" data-ans="0" data-hint="1 XOR 1 = 0 (same bits)."></td></tr>
+      </table>
+    </div>
+    <button class="check-btn" id="btn16" onclick="checkNums(16)">&#10003; Check my table</button>
+    <div class="drag-result" id="res16"></div>
+  </div>
+
+  <!-- Activity 17 — OR/XOR lab -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#128161; Activity 17 — OR and XOR mask lab</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:12px;line-height:1.5;">Build the mask that completes each task. Look carefully at which operation each task uses.</div>
+    <div class="explorer" id="lab17"></div>
+    <div class="fb" id="fb17"></div>
+  </div>
+
+  <!-- Activity 18 — OR/XOR inputs -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9998; Activity 18 — Apply OR and XOR masks</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:12px;">Type the 8-bit result.</div>
+    <div id="num18">
+      <div class="num-row"><div class="num-q"><span class="mono">10010000</span> OR <span class="mono">00000110</span></div><input class="num" data-ans="10010110" data-hint="10010000 OR 00000110: bits 1 and 2 are set to 1: 10010110."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">01010101</span> OR <span class="mono">00001111</span></div><input class="num" data-ans="01011111" data-hint="01010101 OR 00001111: the whole lower nibble is set to 1: 01011111."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">11001100</span> XOR <span class="mono">10101010</span></div><input class="num" data-ans="01100110" data-hint="11001100 XOR 10101010: 1 wherever the bits differ: 01100110."></div>
+      <div class="num-row"><div class="num-q"><span class="mono">11110000</span> XOR <span class="mono">11111111</span></div><input class="num" data-ans="00001111" data-hint="11110000 XOR 11111111: every bit is flipped: 00001111."></div>
+    </div>
+    <button class="check-btn" id="btn18" onclick="checkNums(18)">&#10003; Check my answers</button>
+    <div class="drag-result" id="res18"></div>
+  </div>
+
+  <!-- Activity 19 — word chip correct=c -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9998; Activity 19 — Fill in the gap</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:16px;line-height:1.6;">Applying the same mask twice returns the original pattern when the operation is <span style="background:#1e1e2e;color:#fab387;font-family:'Courier New',monospace;padding:2px 10px;border-radius:4px;font-size:13pt;">&#9744;</span>.</div>
+    <div id="opts19w">
+      <span class="wopt" onclick="pickWopt(19,'a',this)">AND</span>
+      <span class="wopt" onclick="pickWopt(19,'b',this)">OR</span>
+      <span class="wopt" onclick="pickWopt(19,'c',this)">XOR</span>
+      <span class="wopt" onclick="pickWopt(19,'d',this)">a logical shift</span>
+    </div>
+    <div class="fb" id="fb19"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 6 — CHOOSING & REVIEW ═══════════════ -->
+<div style="margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid #d0d0d0;">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #007BA6;">
+    <div style="min-width:36px;height:36px;border-radius:50%;background:#007BA6;color:#fff;font-size:14pt;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</div>
+    <div style="font-size:18pt;font-weight:700;color:#007BA6;">Choosing the Right Tool &amp; Review</div>
+    <div style="margin-left:auto;font-size:10pt;font-weight:700;color:#007BA6;background:#e3f2fd;padding:4px 12px;border-radius:20px;white-space:nowrap;border:1px solid #b3d4e8;flex-shrink:0;">&#9679; ~15 minutes</div>
+  </div>
+
+  <div style="background:#fff;border:1px solid #d0d0d0;border-radius:6px;padding:20px 24px;margin-bottom:18px;">
+    <div style="overflow-x:auto;margin-bottom:14px;">
+      <table class="cx-tbl" style="min-width:620px;font-size:12.5pt;">
+        <tr><th>I want to…</th><th>Use</th><th>Mask / shift rule</th></tr>
+        <tr><td>Multiply an unsigned number by 2<sup>n</sup></td><td>Logical shift left n</td><td>0s enter on the right</td></tr>
+        <tr><td>Divide an unsigned number by 2<sup>n</sup></td><td>Logical shift right n</td><td>0s enter on the left</td></tr>
+        <tr><td>Divide a signed (two's complement) number by 2<sup>n</sup></td><td>Arithmetic shift right n</td><td>Sign bit copied in on the left</td></tr>
+        <tr><td><strong>Check</strong> whether a bit is 1</td><td>AND</td><td>1 in the bit to check, 0 elsewhere; non-zero result = set</td></tr>
+        <tr><td><strong>Clear</strong> bits (switch off)</td><td>AND</td><td>0 in the bits to clear, 1 elsewhere</td></tr>
+        <tr><td><strong>Set</strong> bits (switch on)</td><td>OR</td><td>1 in the bits to set, 0 elsewhere</td></tr>
+        <tr><td><strong>Flip</strong> bits (toggle)</td><td>XOR</td><td>1 in the bits to flip, 0 elsewhere</td></tr>
+      </table>
+    </div>
+    <div style="border-left:4px solid #007BA6;background:#e3f2fd;padding:12px 16px;border-radius:0 6px 6px 0;font-size:13pt;">
+      <strong style="color:#007BA6;">Exam tip:</strong> when a question asks you to "use a mask to check" a bit, state the <strong>operation</strong> (AND), write the <strong>mask</strong> in full (all 8 bits), show the <strong>result</strong>, and say what the result <strong>tells you</strong> (non-zero = bit is 1, zero = bit is 0).
+    </div>
+  </div>
+
+  <!-- Activity 20 — match task → tool -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9654; Activity 20 — Match each task to the right operation</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:14px;">Use the dropdowns. One option is not needed.</div>
+    <div id="match2">
+      <div class="match-row"><div class="match-term">Clear the lower nibble</div><select class="match-sel" data-ans="and0f"></select></div>
+      <div class="match-row"><div class="match-term">Switch on bit 0</div><select class="match-sel" data-ans="or01"></select></div>
+      <div class="match-row"><div class="match-term">Flip every bit</div><select class="match-sel" data-ans="xorff"></select></div>
+      <div class="match-row"><div class="match-term">Check if bit 7 is 1</div><select class="match-sel" data-ans="and80"></select></div>
+      <div class="match-row"><div class="match-term">Unsigned &times; 4</div><select class="match-sel" data-ans="lsl2"></select></div>
+      <div class="match-row"><div class="match-term">Signed &minus;40 &divide; 2</div><select class="match-sel" data-ans="asr1"></select></div>
+    </div>
+    <button class="match-btn" id="match2-btn" onclick="checkMatch2()">&#10003; Check my answers</button>
+    <div class="match-result" id="match2-res"></div>
+  </div>
+
+  <!-- Activity 21 — MCQ controller correct=b -->
+  <div style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;margin-bottom:18px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#10003; Activity 21 — Multiple choice — read the flags</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:10px;line-height:1.5;">A game controller sends one status byte. Each bit is a flag: 1 means the button is pressed.</div>
+    <div style="overflow-x:auto;margin-bottom:12px;">
+      <table class="cx-tbl c" style="min-width:560px;">
+        <tr><th>Bit</th><th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr>
+        <tr><td><strong>Button</strong></td><td>Start</td><td>Select</td><td>Right</td><td>Left</td><td>Y</td><td>X</td><td>B</td><td>A</td></tr>
+        <tr><td><strong>Status</strong></td><td class="mono">0</td><td class="mono">0</td><td class="mono">1</td><td class="mono">0</td><td class="mono">0</td><td class="mono">1</td><td class="mono">0</td><td class="mono">1</td></tr>
+      </table>
+    </div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:14px;">The game ANDs the status with <span class="mono">00000100</span>. What is the result, and what does it tell the game?</div>
+    <div id="opts21">
+      <div class="opt" onclick="pickOpt(21,'a',this)">a) <span class="mono">00100101</span> — Right, X and A are pressed</div>
+      <div class="opt" onclick="pickOpt(21,'b',this)">b) <span class="mono">00000100</span> — the result is not zero, so X is pressed</div>
+      <div class="opt" onclick="pickOpt(21,'c',this)">c) <span class="mono">00000000</span> — X is not pressed</div>
+      <div class="opt" onclick="pickOpt(21,'d',this)">d) <span class="mono">00100001</span> — X has been switched off</div>
+    </div>
+    <div class="fb" id="fb21"></div>
+  </div>
+
+  <!-- Activity 22 — paragraph -->
+  <div class="act" data-n="22" style="background:#fafafa;border:1px solid #d0d0d0;border-radius:6px;padding:18px 22px;">
+    <div style="font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#00796B;margin-bottom:10px;">&#9998; Activity 22 — Review: fill in the gaps</div>
+    <div style="font-size:14pt;font-weight:700;color:#333;margin-bottom:6px;line-height:1.5;">Drag a word into each gap to complete the paragraph. Three chips are not needed.</div>
+    <div class="drag-bank" id="bank22">
+      <div class="drag-chip" draggable="true">XOR</div><div class="drag-chip" draggable="true">doubles</div><div class="drag-chip" draggable="true">sign bit</div><div class="drag-chip" draggable="true">NOT</div>
+      <div class="drag-chip" draggable="true">AND</div><div class="drag-chip" draggable="true">halves</div><div class="drag-chip" draggable="true">arithmetic</div><div class="drag-chip" draggable="true">OR</div>
+      <div class="drag-chip" draggable="true">nibble</div><div class="drag-chip" draggable="true">logical</div>
+    </div>
+    <div style="background:#fff;border:1px solid #d0d0d0;border-radius:6px;padding:16px 20px;font-size:14pt;line-height:2.6;">
+      A <span id="dz22a" class="drop-zone"></span> shift left by one place <span id="dz22b" class="drop-zone"></span> an unsigned number. To divide a negative two's complement number, an <span id="dz22c" class="drop-zone"></span> shift right is used because it copies the <span id="dz22d" class="drop-zone"></span>. To check whether a bit is 1, use an <span id="dz22e" class="drop-zone"></span> mask; to switch a bit on, use <span id="dz22f" class="drop-zone"></span>; and to flip a bit, use <span id="dz22g" class="drop-zone"></span>.
+    </div>
+    <button class="check-btn" id="btn22" onclick="checkDrop22()">&#10003; Check my answers</button>
+    <div class="drag-result" id="res22"></div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div style="background:#007BA6;border-radius:8px;padding:28px 32px;margin-bottom:20px;">
+  <div style="font-size:16pt;font-weight:700;color:#ffffff;margin-bottom:16px;">&#10003; Summary — Topic 2.2.2: Bitwise Manipulation</div>
+  <div class="g2" style="gap:10px;">
+    <div style="background:rgba(255,255,255,0.15);border-radius:6px;padding:12px 16px;font-size:13pt;color:#fff;line-height:1.6;"><strong>Why needed:</strong> bitwise operations are very fast, let one byte hold eight flags, and let programs control hardware and individual settings.</div>
+    <div style="background:rgba(255,255,255,0.15);border-radius:6px;padding:12px 16px;font-size:13pt;color:#fff;line-height:1.6;"><strong>Logical shift:</strong> all bits move; the bit shifted out is lost and 0s fill the gap. Left n = &times; 2<sup>n</sup>, right n = &divide; 2<sup>n</sup> for unsigned numbers. Watch for overflow and lost precision.</div>
+    <div style="background:rgba(255,255,255,0.15);border-radius:6px;padding:12px 16px;font-size:13pt;color:#fff;line-height:1.6;"><strong>Arithmetic shift:</strong> for signed two's complement numbers. Right shift copies the sign bit into the MSB to keep the sign; left shift fills with 0s, and a change in the sign bit means overflow.</div>
+    <div style="background:rgba(255,255,255,0.15);border-radius:6px;padding:12px 16px;font-size:13pt;color:#fff;line-height:1.6;"><strong>AND mask:</strong> 1 keeps, 0 clears. Used to check a bit (non-zero result = bit is 1) or to clear bits.</div>
+    <div style="background:rgba(255,255,255,0.15);border-radius:6px;padding:12px 16px;font-size:13pt;color:#fff;line-height:1.6;"><strong>OR mask:</strong> 1 sets the bit to 1, 0 keeps it. Used to switch flags on.</div>
+    <div style="background:rgba(255,255,255,0.15);border-radius:6px;padding:12px 16px;font-size:13pt;color:#fff;line-height:1.6;"><strong>XOR mask:</strong> 1 flips the bit, 0 keeps it. Applying the same XOR mask twice restores the original.</div>
+  </div>
+</div>
+
+</div></div>
+<script>
+// ══════════ MATCH DROPDOWNS ══════════
+var MATCH_OPTS = {
+  match1: [
+    ['flag','A single bit used to record whether something is on or off'],
+    ['lsb','The right-most bit, with the smallest place value'],
+    ['bw','An operation that works on each individual bit of a binary pattern'],
+    ['mask','A bit pattern combined with another pattern to check or change chosen bits'],
+    ['msb','The left-most bit, with the largest place value']
+  ],
+  match2: [
+    ['xorff','XOR with 11111111'],
+    ['asr1','Arithmetic shift right 1'],
+    ['and80','AND with 10000000'],
+    ['x','OR with 00000000'],
+    ['or01','OR with 00000001'],
+    ['lsl2','Logical shift left 2'],
+    ['and0f','AND with 11110000']
+  ]
+};
+Object.keys(MATCH_OPTS).forEach(function(id) {
+  document.querySelectorAll('#' + id + ' .match-sel').forEach(function(sel) {
+    var h = '<option value="">— choose —</option>';
+    MATCH_OPTS[id].forEach(function(o){ h += '<option value="' + o[0] + '">' + o[1] + '</option>'; });
+    sel.innerHTML = h;
+  });
+});
+
+// ══════════ MCQ ══════════
+var mcqChosen = {};
+var MCQ_CORRECT = { 2:'d', 7:'b', 10:'a', 14:'c', 21:'b' };
+var MCQ_FB = {
+  2:{
+    ok:'&#10003; Correct! Each setting only needs one bit, so eight flags fit in one byte. A mask can then check, switch on, switch off or flip one setting without touching the rest.',
+    a:'&#10007; Each setting is just on or off, so it needs one bit, not a whole byte. Packing eight flags into one byte saves space, and masks change one at a time.',
+    b:'&#10007; Players never see the bits. The benefit is saving space and being able to change one setting with a mask.',
+    c:'&#10007; Bitwise operations do not convert to hex. They let eight flags share one byte and be changed one at a time.'
+  },
+  7:{
+    ok:'&#10003; Correct! The MSB of 11001000 is 1, and it was shifted out. 400 needs 9 bits (110010000), so it cannot fit in 8 — an overflow. Only the lower 8 bits are left: 10010000 = 144.',
+    a:'&#10007; A left shift multiplies by 2. The problem is that the 1 in the MSB was shifted out, so the answer overflowed.',
+    c:'&#10007; A logical shift always fills with 0. The problem is the 1 that was lost from the left: an overflow.',
+    d:'&#10007; An arithmetic left shift works the same way as a logical one, and 400 still does not fit in 8 bits. It is an overflow.'
+  },
+  10:{
+    ok:'&#10003; Correct! 96 &times; 2 = 192, but the largest 8-bit two\'s complement number is +127. The sign bit flipped from 0 to 1, so the result reads as &minus;64. A changed sign bit after a left shift means overflow.',
+    b:'&#10007; In 8-bit two\'s complement, 11000000 = &minus;128 + 64 = &minus;64, not +192. The sign bit changed, which signals overflow.',
+    c:'&#10007; Nothing is copied into the LSB. On a left shift a 0 enters on the right. The issue is the sign bit changing: overflow.',
+    d:'&#10007; A left shift multiplies by 2. Here the answer is too big, so the sign bit changed — an overflow.'
+  },
+  14:{
+    ok:'&#10003; Correct! The mask 00000100 keeps only bit 2 and clears everything else. If the result is 00000100 (not zero) the bit was 1; if it is 00000000 the bit was 0.',
+    a:'&#10007; OR with 00000100 would <em>set</em> bit 2, destroying the information you wanted to check. Checking uses AND.',
+    b:'&#10007; AND with 11111011 <em>clears</em> bit 2 and keeps the rest — it does not check it. Use AND with 00000100.',
+    d:'&#10007; XOR would <em>flip</em> bit 2. To check a bit, AND with a mask that has a 1 only in that bit.'
+  },
+  21:{
+    ok:'&#10003; Correct! 00100101 AND 00000100 = 00000100. The mask isolates bit 2 (X). The result is not zero, so X is pressed. The other buttons are ignored by this check.',
+    a:'&#10007; That is the original status byte. ANDing with 00000100 clears every bit except bit 2, giving 00000100.',
+    c:'&#10007; Bit 2 of the status byte is 1, so ANDing with 00000100 gives 00000100, not 0. X is pressed.',
+    d:'&#10007; AND with this mask does not switch X off — it clears all the <em>other</em> bits. The result is 00000100: X is pressed.'
+  }
+};
+function pickOpt(qNum, letter, el) {
+  if (mcqChosen[qNum]) return;
+  mcqChosen[qNum] = true;
+  var correct = MCQ_CORRECT[qNum], isOk = (letter === correct);
+  var box = document.getElementById('opts' + qNum), fb = document.getElementById('fb' + qNum);
+  box.querySelectorAll('.opt').forEach(function(o) {
+    o.classList.add('locked');
+    var m = o.getAttribute('onclick').match(/pickOpt\(\d+,'([a-d])'/), v = m ? m[1] : '';
+    if (v === correct) o.classList.add(isOk ? 'correct' : 'reveal');
+    else if (v === letter && !isOk) o.classList.add('wrong');
+  });
+  fb.style.display = 'block';
+  fb.className = 'fb ' + (isOk ? 'fb-ok' : 'fb-bad');
+  fb.innerHTML = isOk ? MCQ_FB[qNum].ok : (MCQ_FB[qNum][letter] || '&#10007; Not quite — the correct answer is highlighted in green above.');
+}
+
+// ══════════ WORD CHIPS ══════════
+var woptChosen = {};
+var WOPT_CORRECT = { 8:'c', 19:'c' };
+var WOPT_FB = {
+  8:{
+    ok:'&#10003; Correct! The sign bit is copied in, so negative numbers stay negative (1s enter) and positive numbers stay positive (0s enter).',
+    a:'&#10007; Always inserting 0 is a <em>logical</em> shift. An arithmetic shift right copies the <strong>sign bit</strong>.',
+    b:'&#10007; 1s only enter when the number is negative. The rule is: copy the <strong>sign bit</strong>.',
+    d:'&#10007; The lost bit disappears off the right-hand end. The left is filled with a copy of the <strong>sign bit</strong>.'
+  },
+  19:{
+    ok:'&#10003; Correct! XOR flips the masked bits, and flipping them again puts them back. AND and OR lose information, so they cannot be undone.',
+    a:'&#10007; AND clears bits to 0, and the original values are lost. Only <strong>XOR</strong> can be reversed by applying it again.',
+    b:'&#10007; OR sets bits to 1, and the original values are lost. Only <strong>XOR</strong> can be reversed by applying it again.',
+    d:'&#10007; A shift loses the bits that fall off the end. Only <strong>XOR</strong> can be reversed by applying the same mask again.'
+  }
+};
+function pickWopt(qNum, letter, el) {
+  if (woptChosen[qNum]) return;
+  woptChosen[qNum] = true;
+  var container = el.parentNode, correct = WOPT_CORRECT[qNum], isOk = (letter === correct);
+  container.querySelectorAll('.wopt').forEach(function(w) {
+    w.classList.add('locked');
+    var m = w.getAttribute('onclick').match(/pickWopt\(\d+,'([a-d])'/), v = m ? m[1] : '';
+    if (v === correct) w.classList.add(isOk ? 'correct' : 'reveal');
+    else if (v === letter && !isOk) w.classList.add('wrong');
+  });
+  var fb = document.getElementById('fb' + qNum);
+  fb.style.display = 'block';
+  fb.className = 'fb ' + (isOk ? 'fb-ok' : 'fb-bad');
+  fb.innerHTML = isOk ? WOPT_FB[qNum].ok : (WOPT_FB[qNum][letter] || '&#10007; Not quite — the correct answer is highlighted above.');
+}
+
+// ══════════ TRUE / FALSE ══════════
+var TF_DATA = {
+  1:{ ok:'&#10003; True! Bits are numbered from 0 on the right, so bit 0 is the LSB with place value 1.', bad:'&#10007; This is True. Bit 0 is the right-most bit, the LSB, worth 1.' },
+  2:{ ok:'&#10003; Correct — False! A shift is one of the fastest CPU instructions — much quicker than a general multiply.', bad:'&#10007; This is False. Shifts are very fast, which is one reason they are used for &times; and &divide; by powers of 2.' },
+  3:{ ok:'&#10003; True! That is the whole point of a mask: chosen bits are changed or checked, the rest are left alone.', bad:'&#10007; This is True. A mask targets only the bits you choose.' },
+  4:{ ok:'&#10003; Correct — False! Every bit moves the same number of places.', bad:'&#10007; This is False. A shift moves all of the bits, not just one.' },
+  5:{ ok:'&#10003; True! AND only gives 1 when both bits are 1, so a 0 in the mask always clears the bit.', bad:'&#10007; This is True. Anything AND 0 = 0.' },
+  6:{ ok:'&#10003; Correct — False! AND can keep or clear bits, but never turn a 0 into a 1. Setting bits needs OR.', bad:'&#10007; This is False. To set bits to 1, use an OR mask.' },
+  7:{ ok:'&#10003; True! Every bit is ANDed with 1, which keeps it, so the pattern is unchanged.', bad:'&#10007; This is True. AND with 1 keeps each bit, so all 1s changes nothing.' },
+  8:{ ok:'&#10003; Correct — False! A result of 00000000 means the checked bit was 0. A non-zero result means it was 1.', bad:'&#10007; This is False. Zero result = bit was 0; non-zero = bit was 1.' }
+};
+function doTF(n, userAns, correctAns) {
+  var row = document.getElementById('tf' + n);
+  if (!row || row.classList.contains('done')) return;
+  row.classList.add('done');
+  var isOk = (userAns === correctAns);
+  row.querySelectorAll('.tf-btn').forEach(function(b) {
+    var bT = b.textContent.trim() === 'True';
+    if (bT === userAns) b.className = isOk ? 'tf-btn ok' : 'tf-btn bad';
+    if (!isOk && bT === correctAns) b.className = 'tf-btn show';
+  });
+  var fb = document.createElement('div');
+  fb.style.cssText = 'margin-top:8px;padding:10px 14px;border-radius:6px;font-size:13pt;line-height:1.6;font-family:Lato,sans-serif;';
+  fb.style.background = isOk ? '#e8f5e9' : '#ffebee';
+  fb.style.color      = isOk ? '#1b5e20' : '#7f0000';
+  fb.style.border     = isOk ? '1px solid #81c784' : '1px solid #ef9a9a';
+  fb.innerHTML = isOk ? TF_DATA[n].ok : TF_DATA[n].bad;
+  row.appendChild(fb);
+}
+
+// ══════════ MATCH ══════════
+function runMatch(matchId, btnId, resId, okMsg, badMsg) {
+  var rows = document.querySelectorAll('#' + matchId + ' .match-row'), allOk = true;
+  rows.forEach(function(row) {
+    row.classList.remove('ok','bad');
+    var sel = row.querySelector('.match-sel');
+    if (sel.value === sel.getAttribute('data-ans')) row.classList.add('ok');
+    else { row.classList.add('bad'); allOk = false; }
+  });
+  var res = document.getElementById(resId);
+  res.style.display = 'block';
+  if (allOk) {
+    res.className = 'match-result fb fb-ok'; res.innerHTML = '&#10003; ' + okMsg;
+    document.getElementById(btnId).disabled = true;
+    rows.forEach(function(r){ r.querySelector('.match-sel').disabled = true; });
+  } else {
+    res.className = 'match-result fb fb-bad'; res.innerHTML = '&#10007; ' + badMsg;
+  }
+}
+function checkMatch1() {
+  runMatch('match1','match1-btn','match1-res',
+    'All correct! You know the key vocabulary: bitwise operations work on single bits, the MSB is on the left, the LSB on the right, masks pick out bits, and flags are single on/off bits.',
+    'One or more are wrong — check those in red. Remember: MSB = left-most (biggest value), LSB = right-most (smallest value).');
+}
+function checkMatch2() {
+  runMatch('match2','match2-btn','match2-res',
+    'All correct! Clear = AND with 0s, set = OR with 1s, flip = XOR with 1s, check = AND with a single 1, &times;4 = logical shift left 2, and a negative number is halved with an arithmetic shift right.',
+    'One or more are wrong. Think: AND clears or checks, OR sets, XOR flips; logical shifts for unsigned, arithmetic for signed.');
+}
+
+// ══════════ NUMBER INPUT CHECKER ══════════
+var NUM_OK = {
+  5:'All correct! Every bit moves; the bits that fall off are lost and 0s fill the gaps.',
+  9:'All correct! On a right shift the sign bit is copied in, so negative numbers stay negative. A left shift fills with 0s.',
+  13:'All correct! A 1 in an AND mask keeps the bit and a 0 clears it.',
+  16:'All correct! AND: both 1. OR: at least one 1. XOR: the bits are different.',
+  18:'All correct! OR with 1 sets a bit; XOR with 1 flips it; a 0 in either mask leaves the bit alone.'
+};
+function norm(v) { return String(v).replace(/[\s,]/g, '').toUpperCase(); }
+function checkNums(n) {
+  var inputs = document.querySelectorAll('#num' + n + ' input.num'), res = document.getElementById('res' + n);
+  var wrong = [], empty = false;
+  inputs.forEach(function(inp) {
+    inp.classList.remove('ok','bad');
+    if (inp.value.trim() === '') { empty = true; return; }
+    if (norm(inp.value) === norm(inp.getAttribute('data-ans'))) inp.classList.add('ok');
+    else { inp.classList.add('bad'); wrong.push(inp.getAttribute('data-hint')); }
+  });
+  res.style.display = 'block';
+  if (empty) { res.className = 'drag-result fb fb-bad'; res.innerHTML = '&#10007; Fill in every box before checking.'; return; }
+  if (!wrong.length) {
+    res.className = 'drag-result fb fb-ok'; res.innerHTML = '&#10003; ' + NUM_OK[n];
+    document.getElementById('btn' + n).disabled = true;
+    inputs.forEach(function(i){ i.readOnly = true; });
+  } else {
+    res.className = 'drag-result fb fb-bad';
+    res.innerHTML = '&#10007; Not quite — fix the boxes in red. Hint: ' + wrong.slice(0, 2).join(' ') + (wrong.length > 2 ? ' (' + (wrong.length - 2) + ' more to fix.)' : '');
+  }
+}
+
+// ══════════ SHIFT EXPLORER ══════════
+var EX_TARGETS = [176, 11], exStep = 0, exVal = 22, exCount = 0;
+function bin8(v) { return ('00000000' + (v & 255).toString(2)).slice(-8); }
+function drawExplorer() {
+  var b = bin8(exVal), pv = [128,64,32,16,8,4,2,1], h = '';
+  for (var i = 0; i < 8; i++) h += '<div class="bitcol"><div class="bitpv">' + pv[i] + '</div><div class="bitbox' + (b[i] === '1' ? ' on' : '') + '">' + b[i] + '</div></div>';
+  document.getElementById('bits4').innerHTML = h;
+  document.getElementById('val4').textContent = exVal;
+  document.getElementById('cnt4').textContent = exCount;
+  var t = 'Targets: ';
+  EX_TARGETS.forEach(function(x, i) {
+    t += '<span class="target ' + (i < exStep ? 'done' : (i === exStep ? 'now' : '')) + '">' + (i < exStep ? '&#10003; ' : '') + x + '</span>';
+  });
+  document.getElementById('targets4').innerHTML = t;
+}
+function exShift(dir) {
+  var lost;
+  if (dir === 'L') { lost = (exVal >> 7) & 1; exVal = (exVal << 1) & 255; }
+  else { lost = exVal & 1; exVal = exVal >> 1; }
+  exCount++;
+  document.getElementById('lost4').textContent = lost;
+  var fb = document.getElementById('fb4');
+  if (exStep < EX_TARGETS.length && exVal === EX_TARGETS[exStep]) {
+    exStep++;
+    fb.style.display = 'block'; fb.className = 'fb fb-ok';
+    if (exStep === 1) fb.innerHTML = '&#10003; 176 reached! 22 &times; 2 &times; 2 &times; 2 = 176, so that took three left shifts (&times; 8). Now shift right to reach 11.';
+    else fb.innerHTML = '&#10003; Both targets hit! 176 &rarr; 88 &rarr; 44 &rarr; 22 &rarr; 11 is four right shifts (&divide; 16). Try this: from 11, shift right once more. You get 5, not 5.5 — the 1 that falls off is lost.';
+  } else if (exVal === 0) {
+    fb.style.display = 'block'; fb.className = 'fb fb-bad';
+    fb.innerHTML = '&#10007; Every 1 has been shifted out and lost, so the value is 0. Press Reset to start again.';
+  }
+  drawExplorer();
+}
+function exReset() { exVal = 22; exCount = 0; document.getElementById('lost4').textContent = '–'; drawExplorer(); }
+drawExplorer();
+
+// ══════════ MASK LABS ══════════
+var LABS = {
+  12: { i: 0, mask: 0, tasks: [
+    { op:'AND', pat:'10110110', mask:'00001111', text:'Keep only the lower nibble of the pattern (clear the upper nibble).',
+      done:'&#10003; Mask 00001111: the 1s keep the lower nibble, the 0s clear the upper nibble. Result 00000110.' },
+    { op:'AND', pat:'01101100', mask:'00001000', text:'Check the status of bit 3 (place value 8). Is it 1?',
+      done:'&#10003; Mask 00001000 isolates bit 3. The result is 00001000 — not zero — so bit 3 is 1.' },
+    { op:'AND', pat:'11010111', mask:'11111100', text:'Clear bits 0 and 1, and keep every other bit the same.',
+      done:'&#10003; Mask 11111100: 0s clear bits 0 and 1, 1s keep the rest. Result 11010100.' }
+  ]},
+  17: { i: 0, mask: 0, tasks: [
+    { op:'OR', pat:'00110100', mask:'10000001', text:'Switch on bit 7 and bit 0, and leave the rest unchanged.',
+      done:'&#10003; OR with 10000001 sets the MSB and LSB to 1. Result 10110101.' },
+    { op:'OR', pat:'00000101', mask:'11110000', text:'Set the whole upper nibble to 1.',
+      done:'&#10003; OR with 11110000 sets bits 4–7 and keeps the lower nibble. Result 11110101.' },
+    { op:'XOR', pat:'10101010', mask:'00001111', text:'Flip (toggle) the lower nibble only.',
+      done:'&#10003; XOR with 00001111 flips bits 0–3. Result 10100101. XOR it again and you would get 10101010 back.' }
+  ]}
+};
+function applyOp(op, a, b) { return op === 'AND' ? (a & b) : op === 'OR' ? (a | b) : (a ^ b); }
+function drawLab(n) {
+  var L = LABS[n], box = document.getElementById('lab' + n);
+  if (L.i >= L.tasks.length) {
+    box.innerHTML = '<div class="task" style="color:#a6e3a1;">&#10003; All tasks complete!</div>';
+    return;
+  }
+  var T = L.tasks[L.i], pat = parseInt(T.pat, 2), res = applyOp(T.op, pat, L.mask);
+  var mb = bin8(L.mask), rb = bin8(res), h = '';
+  h += '<div class="task">Task ' + (L.i + 1) + ' of ' + L.tasks.length + ' — <strong>' + T.op + '</strong>: ' + T.text + '</div>';
+  h += '<div style="overflow-x:auto;"><div class="lab-row"><span class="lab-lbl">Pattern</span>';
+  for (var i = 0; i < 8; i++) h += '<div class="bitbox' + (T.pat[i] === '1' ? ' on' : '') + '">' + T.pat[i] + '</div>';
+  h += '</div><div class="lab-row"><span class="lab-lbl">Mask (' + T.op + ')</span>';
+  for (var j = 0; j < 8; j++) h += '<button class="bitbox' + (mb[j] === '1' ? ' on' : '') + '" onclick="labToggle(' + n + ',' + j + ')">' + mb[j] + '</button>';
+  h += '</div><div class="lab-row"><span class="lab-lbl">Result</span>';
+  for (var k = 0; k < 8; k++) h += '<div class="bitbox' + (rb[k] === '1' ? ' on' : '') + '">' + rb[k] + '</div>';
+  h += '</div></div>';
+  box.innerHTML = h;
+}
+function labToggle(n, j) {
+  var L = LABS[n];
+  L.mask ^= (1 << (7 - j));
+  var T = L.tasks[L.i], fb = document.getElementById('fb' + n);
+  if (bin8(L.mask) === T.mask) {
+    fb.style.display = 'block'; fb.className = 'fb fb-ok';
+    fb.innerHTML = T.done + (L.i + 1 < L.tasks.length ? ' Next task loaded.' : ' Lab complete!');
+    L.i++; L.mask = 0;
+  }
+  drawLab(n);
+}
+drawLab(12); drawLab(17);
+
+// ══════════ DRAG & DROP ENGINE ══════════
+var DONE = {};
+document.querySelectorAll('[id^="bank"] .drag-chip').forEach(function(c){ c.setAttribute('data-home', c.parentNode.id); });
+function actOf(el) { return el && el.closest ? el.closest('.act') : null; }
+function dropTarget(el) {
+  if (el && el.nodeType !== 1) el = el.parentNode;
+  return el && el.closest ? el.closest('.drop-zone, .drag-bank') : null;
+}
+function placeChip(chip, tgt) {
+  if (!chip || !tgt || chip.classList.contains('locked')) return;
+  var act = actOf(tgt);
+  if (!act || actOf(chip) !== act || DONE[act.getAttribute('data-n')]) return;
+  if (tgt.classList.contains('drop-zone')) {
+    var d = tgt.querySelector('.drag-chip');
+    if (d === chip) return;
+    if (d) {
+      var from = chip.parentNode;
+      if (from.classList.contains('drop-zone')) from.appendChild(d);
+      else document.getElementById(d.getAttribute('data-home')).appendChild(d);
+    }
+    tgt.appendChild(chip);
+  } else if (tgt !== chip.parentNode) {
+    tgt.appendChild(chip);
+  }
+}
+var _drag = null;
+document.addEventListener('dragstart', function(e) {
+  var t = e.target;
+  if (t.classList && t.classList.contains('drag-chip') && !t.classList.contains('locked')) {
+    _drag = t; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', t.textContent);
+  }
+});
+document.addEventListener('dragover', function(e) { var t = dropTarget(e.target); if (t && _drag) { e.preventDefault(); t.classList.add('drag-over'); } });
+document.addEventListener('dragleave', function(e) { var t = dropTarget(e.target); if (t) t.classList.remove('drag-over'); });
+document.addEventListener('drop', function(e) {
+  e.preventDefault();
+  var t = dropTarget(e.target);
+  if (t) { t.classList.remove('drag-over'); placeChip(_drag, t); }
+  _drag = null;
+});
+document.addEventListener('dragend', function() {
+  _drag = null;
+  document.querySelectorAll('.drag-over').forEach(function(z){ z.classList.remove('drag-over'); });
+});
+var _pick = null;
+function unpick() { if (_pick) _pick.classList.remove('picked'); _pick = null; }
+document.addEventListener('click', function(e) {
+  var el = e.target; if (!el.closest) return;
+  var chip = el.closest('.drag-chip'), tgt = el.closest('.drop-zone, .drag-bank');
+  if (!_pick) { if (chip && !chip.classList.contains('locked')) { _pick = chip; chip.classList.add('picked'); } return; }
+  if (chip === _pick) { unpick(); return; }
+  if (chip && !chip.classList.contains('locked') && !chip.parentNode.classList.contains('drop-zone') && actOf(chip) === actOf(_pick)) {
+    unpick(); _pick = chip; chip.classList.add('picked'); return;
+  }
+  if (tgt) { placeChip(_pick, tgt); unpick(); return; }
+  unpick();
+});
+function getDZ(id) { var z = document.getElementById(id), c = z ? z.querySelector('.drag-chip') : null; return c ? c.textContent.trim() : ''; }
+function getSort(id) { var z = document.getElementById(id); return z ? Array.from(z.querySelectorAll('.drag-chip')).map(function(c){ return c.textContent.trim(); }) : []; }
+function lockAct(n) {
+  var act = document.querySelector('.act[data-n="' + n + '"]');
+  if (act) act.querySelectorAll('.drag-chip').forEach(function(c){ c.classList.add('locked'); c.setAttribute('draggable','false'); });
+}
+function checkSlots(n, ids, ans, okMsg, hints, emptyMsg) {
+  if (DONE[n]) return;
+  unpick();
+  var vals = ids.map(getDZ), res = document.getElementById('res' + n);
+  res.style.display = 'block';
+  if (vals.some(function(v){ return v === ''; })) { res.className = 'drag-result fb fb-bad'; res.innerHTML = '&#10007; ' + emptyMsg; return; }
+  var wrong = [];
+  vals.forEach(function(v, i){ if (v !== ans[i]) wrong.push(hints[i]); });
+  if (wrong.length === 0) {
+    DONE[n] = true; document.getElementById('btn' + n).disabled = true; lockAct(n);
+    res.className = 'drag-result fb fb-ok'; res.innerHTML = '&#10003; ' + okMsg;
+  } else {
+    res.className = 'drag-result fb fb-bad';
+    res.innerHTML = '&#10007; Not quite. ' + wrong.slice(0, 2).join(' ') + (wrong.length > 2 ? ' (' + (wrong.length - 2) + ' more to fix.)' : '');
+  }
+}
+function checkDrop6() {
+  var orig = '10010111', res = '00101110', hints = ['The bit lost is the old MSB (bit 7), which was <strong>1</strong>.'];
+  for (var i = 0; i < 8; i++) {
+    hints.push(i < 7 ? 'New bit ' + (7 - i) + ' takes the old bit ' + (6 - i) + ', which is <strong>' + orig[i + 1] + '</strong>.' : 'New bit 0 is filled with <strong>0</strong> in a logical left shift.');
+  }
+  checkSlots(6, ['dz6x','dz6a','dz6b','dz6c','dz6d','dz6e','dz6f','dz6g','dz6h'],
+    ['1'].concat(res.split('')),
+    'All correct! <span class="mono">10010111</span> &rarr; <span class="mono">00101110</span>. The 1 in the MSB is lost, so 151 &times; 2 = 302 does not fit, and the register holds 46 — an overflow.',
+    hints, 'Fill the bit-lost box and all eight result bits before checking.');
+}
+function checkDrop22() {
+  checkSlots(22, ['dz22a','dz22b','dz22c','dz22d','dz22e','dz22f','dz22g'],
+    ['logical','doubles','arithmetic','sign bit','AND','OR','XOR'],
+    'All correct — a great summary of bitwise manipulation!',
+    ['Gap 1: an unsigned shift is a <strong>logical</strong> shift.',
+     'Gap 2: shifting left one place <strong>doubles</strong> the value.',
+     'Gap 3: signed numbers use an <strong>arithmetic</strong> shift.',
+     'Gap 4: an arithmetic shift right copies the <strong>sign bit</strong>.',
+     'Gap 5: to check a bit, use <strong>AND</strong>.',
+     'Gap 6: to switch a bit on, use <strong>OR</strong>.',
+     'Gap 7: to flip a bit, use <strong>XOR</strong>.'],
+    'Drag a word into every gap before checking.');
+}
+function checkSort11() {
+  if (DONE[11]) return;
+  unpick();
+  var cols = {
+    'sort11-log': ['On a right shift, a 0 always enters from the left','Treats the pattern as an unsigned number','Shifting 10000000 right by 1 gives 01000000'],
+    'sort11-ari': ['On a right shift, the sign bit is copied into the MSB',"Keeps the sign of a two's complement number",'Shifting 10000000 right by 1 gives 11000000']
+  };
+  var names = { 'sort11-log':'Logical shift', 'sort11-ari':'Arithmetic shift' };
+  var res = document.getElementById('res11'), count = 0, wrong = [];
+  res.style.display = 'block';
+  Object.keys(cols).forEach(function(zone) {
+    getSort(zone).forEach(function(v) {
+      count++;
+      if (cols[zone].indexOf(v) === -1) {
+        var home = Object.keys(cols).filter(function(z){ return cols[z].indexOf(v) !== -1; })[0];
+        wrong.push('“' + v + '” belongs in <strong>' + names[home] + '</strong>.');
+      }
+    });
+  });
+  if (count < 6) { res.className = 'drag-result fb fb-bad'; res.innerHTML = '&#10007; Drag all 6 chips into a column before checking.'; return; }
+  if (!wrong.length) {
+    DONE[11] = true; document.getElementById('btn11').disabled = true; lockAct(11);
+    res.className = 'drag-result fb fb-ok';
+    res.innerHTML = '&#10003; All correct! A logical shift always inserts 0 and treats the pattern as unsigned. An arithmetic shift right copies the sign bit, so &minus;128 (10000000) becomes &minus;64 (11000000).';
+  } else {
+    res.className = 'drag-result fb fb-bad';
+    res.innerHTML = '&#10007; ' + wrong.slice(0, 2).join(' ') + ' Tip: "sign" points to arithmetic; "always 0" points to logical.';
+  }
+}
+</script>
+</body>
+</html>
